@@ -1,6 +1,5 @@
 # SOP6 Aanpak
-*Goos van den Bekerom*
-*Marvin Zwolsman*
+*Goos van den Bekerom & Marvin Zwolsman*
 
 ## Introductie
 Voor het vak SOP6 gaan we een geautomatiseerde ontwikkelstraat opbouwen. In dit document gaan we bijhouden welke stappen we hiervoor hebben genomen. We gaan hiervoor zo min mogelijk tekst schrijven en zoveel mogelijk laten zien wat we gedaan hebben. Denk aan uitgevoerde command line commando's, stukjes code en screenshots.
