@@ -1,6 +1,5 @@
 # SOP6 Aanpak
 *Goos van den Bekerom*
-
 *Marvin Zwolsman*
 
 ## Introductie
@@ -117,3 +116,26 @@ node {
 In onderstaande screenshots is te zien dat de Jenkins pipeline succesvol verlopen is en dat de war files in Artifactory staan.
 ![Screenshot artifactory 1](https://cdn.discordapp.com/attachments/380439326950948874/423468035215458315/unknown.png)
 ![Screenshot artifactory 2](https://cdn.discordapp.com/attachments/380439326950948874/423468003552657428/unknown.png)
+
+## SonarQube
+Om de kwaliteit van onze code automatisch te kunnen testen hebben we SonarQube toegevoegd aan onze automatische ontwikkelstraat. Dit hebben we gedaan doormiddel van de volgende commando's
+1. `$ docker pull sonarqube:7.0-alpine`
+2. `$ docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:7.0-alpine`
+3. `$ docker network connect sop6 sonarqube`
+
+Nu SonarQube draait binnen ons docker netwerk hebben we dit moeten configureren in ons project. Dit hebben we gedaan door deze plugin toe te voegen aan het `build.gradle` bestand:
+```groovy
+plugins {
+    id "org.sonarqube" version "2.6"
+}
+```
+Daarna hebben we deze stage toegevoegd aan de `Jenkinsfile`
+```groovy
+stage('SonarQube analysis') {
+    withSonarQubeEnv('er-microservices') {
+        sh './gradlew --info sonarqube'
+    }
+}
+```
+In deze screenshot is te zien dat SonarQube nu draait en dat het de code heeft geanalyseerd.
+![Screenshot SonarQube](https://cdn.discordapp.com/attachments/380439326950948874/423482330162790400/unknown.png)
