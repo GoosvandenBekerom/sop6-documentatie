@@ -16,4 +16,5 @@
 ## UML Activity Diagram
 
 In onderstaand diagram staat de flow van ons ontwikkelproces beschreven.
+
 ![Activity Diagram](https://cdn.discordapp.com/attachments/380439326950948874/425979854606041089/sop6-activity-diagram.png)
