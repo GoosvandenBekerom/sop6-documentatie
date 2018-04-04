@@ -138,3 +138,25 @@ stage('SonarQube analysis') {
 ```
 In deze screenshot is te zien dat SonarQube nu draait en dat het de code heeft geanalyseerd.
 ![Screenshot SonarQube](https://cdn.discordapp.com/attachments/380439326950948874/423482330162790400/unknown.png)
+
+## OTAP & Dynamische codekwaliteit
+
+Nu onze code netjes gebouwd en getest wordt, zijn we het deployen naar een acceptatieserver gaan automatiseren. Om dit te realiseren hebben we eerst een servlet gemaakt die informatie laat zien over het systeem waarop de applicatieserver draait.
+
+Deze geeft de volgende output:  
+![Afbeelding met applicatieserver output](https://cdn.discordapp.com/attachments/380439326950948874/431027424147406848/unknown.png)
+
+Vervolgens hebben we een nieuwe gradle task geschreven die de gebouwde applicatie deployed naar een externe payara container. deze task ziet er als volgt uit
+
+```groovy
+task deploy(dependsOn: 'war', type:Exec) {
+    commandLine "/var/jenkins_home/glassfish5/bin/asadmin"
+    args "--user", "admin", "--passwordFile", "password.txt", "--host", "payara", "deploy", "--force=true", "--upload=true", "${war.archivePath}"
+}
+```
+
+In onderstaande screenshot kun je aan de hostname zien dat de servlet in een aparte docker container draait.
+![Afbeelding met applicatieserver output](https://cdn.discordapp.com/attachments/380439326950948874/431035679397511168/unknown.png)
+
+En hier is nog een screenshot van de succesvolle Jenkins pipeline.
+![Afbeelding van Jenkins pipeline](https://cdn.discordapp.com/attachments/380439326950948874/431036528547069962/unknown.png)
