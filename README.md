@@ -146,6 +146,10 @@ Nu onze code netjes gebouwd en getest wordt, zijn we het deployen naar een accep
 Deze geeft de volgende output:  
 ![Afbeelding met applicatieserver output](https://cdn.discordapp.com/attachments/380439326950948874/431027424147406848/unknown.png)
 
+We hebben een test applicatie server gemaakt en toegevoegd aan het netwerk:
+- `$ docker run --name deploy -p 8081:8080 payara/server-full`
+- `$ docker network connect sop6 deploy`
+
 Vervolgens hebben we een nieuwe gradle task geschreven die de gebouwde applicatie deployed naar een externe payara container. deze task ziet er als volgt uit
 
 ```groovy
@@ -160,3 +164,21 @@ In onderstaande screenshot kun je aan de hostname zien dat de servlet in een apa
 
 En hier is nog een screenshot van de succesvolle Jenkins pipeline.
 ![Afbeelding van Jenkins pipeline](https://cdn.discordapp.com/attachments/380439326950948874/431036528547069962/unknown.png)
+
+#### Acceptatie server
+
+Om ook nog een acceptatie server te simuleren hebben we de bovenstaande stap nog een keer herhaald. deze ziet er als volgt uit.
+
+```groovy
+task deployAcceptatie(dependsOn: 'war', type:Exec) {
+    commandLine "/var/jenkins_home/glassfish5/bin/asadmin"
+    args "--user", "admin", "--passwordFile", "password.txt", "--host", "acceptatie", "deploy", "--force=true", "--upload=true", "${war.archivePath}"
+}
+```
+
+De acceptatie container hebben we als volgt aangemaakt en aan het sop6 netwerk toegevoegd:
+- `$ docker run --name acceptatie -p 8082:8080 payara/server-full`
+- `$ docker network connect sop6 acceptatie`
+
+en in deze screenshot is te zien dat de pipeline een extra stap bevat die succesvol uitgevoerd wordt.
+![Pipeline](https://cdn.discordapp.com/attachments/380439326950948874/431058814415011850/unknown.png)
